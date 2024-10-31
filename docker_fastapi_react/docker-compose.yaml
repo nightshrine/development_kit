@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+    pse_frontend:
+        build:
+            context: frontend
+            dockerfile: Dockerfile
+        ports:
+            - '3000:80'
+        volumes:
+            - ./frontend:/app # フロントエンドディレクトリをマウント
+            - /app/node_modules # node_modules をマウントから除外
+        tty: true
+        stdin_open: true
+
+    pse_backend:
+        build:
+            context: backend
+            dockerfile: Dockerfile
+        ports:
+            - '8080:8080'
+        volumes:
+            - ./backend:/app # バックエンドディレクトリをマウント
+            - /app/venv # venvディレクトリ（仮想環境）をマウントから除外
+            - /app/__pycache__ # キャッシュファイルも除外
+        tty: true
+        stdin_open: true
+        environment:
+            - PYTHONUNBUFFERED=1 # Pythonのログ出力をリアルタイムで反映
